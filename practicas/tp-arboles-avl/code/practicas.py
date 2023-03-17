@@ -11,7 +11,91 @@ class AVLNode:
 
 '''
 Parte 1
+'''
 
+def search(B, element):
+    return searchR(B.root, element) if B.root is not None else None
+
+def searchR(node, element):
+    a = None
+    if node.value == element:
+        return node
+    if node.leftnode != None:
+        a = searchR(node.leftnode, element)
+    if node.rightnode != None and a == None:
+        a = searchR(node.rightnode, element)
+    return a
+
+def access(B,key):
+    return accessR(B.root, key)
+
+def accessR(currentNode, key):
+    if currentNode.key == key:
+        return currentNode.value
+
+    if currentNode.key > key and currentNode.leftnode != None:
+        return accessR(currentNode.leftnode, key)
+    if currentNode.key < key and currentNode.rightnode != None:
+        return accessR(currentNode.rightnode,key)
+
+def update(L, element, key):
+    return updateR(L.root, element, key)
+
+def updateR(currentNode, element, key):
+    if currentNode.key == key:
+        currentNode.value = element
+        return key
+
+    if currentNode.key > key and currentNode.leftnode != None:
+        return updateR(currentNode.leftnode, key)
+    if currentNode.key < key and currentNode.rightnode != None:
+        return updateR(currentNode.rightnode,key)
+
+def deleteKey(B, key):
+    return deleteKeyR(B.root, key)
+
+def deleteKeyR(currentNode, key):
+    if currentNode.key == key:
+        if currentNode.leftnode != None and currentNode.rightnode != None:
+            if currentNode.leftnode.key == key:
+                currentNode.parent.leftnode = None
+            else:
+                currentNode.parent.rightnode = None
+        elif currentNode.leftnode == None or currentNode.rightnode == None:
+            nodo = currentNode.leftnode if currentNode.leftnode != None else currentNode.rightnode
+            if currentNode.parent.leftnode == currentNode:
+                currentNode.parent.leftnode = nodo
+            else:
+                currentNode.parent.rightnode = nodo
+        else:
+            nodoleft = currentNode.leftnode
+            nodoright = currentNode.rightnode
+            nodo = currentNode
+            currentNode = currentNode.parent
+            if nodoleft.leftnode == None and nodoleft.rightnode == None and nodoright.leftnode == None and nodoright.rightnode == None:
+                nodoleft.parent = currentNode
+                if currentNode.leftnode.key == key:
+                    currentNode.leftnode = nodoleft
+                else:
+                    currentNode.rightnode = nodoleft
+                nodoleft.rightnode = nodoright
+            else:
+                nodo_replace = nodoleft.rightnode if nodoleft.rightnode != None else nodoright.leftnode
+                nodo_replace.parent = currentNode
+                if currentNode.leftnode.key == key:
+                    currentNode.leftnode = nodo_replace
+                else:
+                    currentNode.rightnode = nodo_replace
+        return key
+
+    if currentNode.key > key and currentNode.leftnode != None:
+        return deleteKeyR(currentNode.leftnode,key)
+    if currentNode.key < key and currentNode.rightnode != None:
+        return deleteKeyR(currentNode.rightnode,key)
+
+
+
+'''
 Ejercicio 1
 '''
 
@@ -248,18 +332,6 @@ def deleteR(currentNode, element):
 
 
 
-def search(B, element):
-    return searchR(B.root, element) if B.root is not None else None
-
-def searchR(node, element):
-    a = None
-    if node.value == element:
-        return node
-    if node.leftnode != None:
-        a = searchR(node.leftnode, element)
-    if node.rightnode != None and a == None:
-        a = searchR(node.rightnode, element)
-    return a
 
 
 strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d","e", "f"]
